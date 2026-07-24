@@ -73,7 +73,7 @@ export function App() {
         {activeTab !== 'admin' && (
           <div style={{
             display: 'flex',
-            background: 'rgba(15, 23, 42, 0.8)',
+            background: '#e2e8f0',
             padding: '4px',
             borderRadius: '9999px',
             border: '1px solid var(--border-color)',

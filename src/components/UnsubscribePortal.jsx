@@ -152,13 +152,13 @@ export function UnsubscribePortal({ initialEmail = '', onSwitchToSubscribe }) {
             </p>
 
             <div style={{
-              background: 'rgba(15, 23, 42, 0.9)',
-              border: '1px solid #f43f5e',
+              background: '#fff1f2',
+              border: '1.5px solid #f43f5e',
               borderRadius: '12px',
               padding: '1rem',
               fontSize: '1.15rem',
               fontWeight: '700',
-              color: '#f87171',
+              color: '#e11d48',
               wordBreak: 'break-all',
               marginBottom: '1.5rem'
             }}>
