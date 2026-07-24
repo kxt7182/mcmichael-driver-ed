@@ -158,13 +158,13 @@ export function SubscribeForm({ onSwitchToUnsubscribe }) {
             </p>
 
             <div style={{
-              background: '#f0f9ff',
-              border: '1.5px solid #0284c7',
+              background: '#eff6ff',
+              border: '1.5px solid #1249a0',
               borderRadius: '12px',
               padding: '1rem',
               fontSize: '1.15rem',
               fontWeight: '700',
-              color: '#0369a1',
+              color: '#1249a0',
               wordBreak: 'break-all',
               marginBottom: '1.5rem'
             }}>

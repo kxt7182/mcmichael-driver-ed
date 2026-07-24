@@ -46,16 +46,16 @@ export function App() {
         {/* App Title Header inside card context */}
         {activeTab !== 'admin' && (
           <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-            <div style={{ textAlign: 'center', marginBottom: '0.75rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
               <img
                 src={schoolLogo}
                 alt="McMichael High School Phoenix Logo"
                 style={{
-                  height: '115px',
+                  height: '185px',
                   width: 'auto',
                   objectFit: 'contain',
                   margin: '0 auto',
-                  filter: 'drop-shadow(0 6px 16px rgba(15, 23, 42, 0.1))'
+                  filter: 'drop-shadow(0 6px 16px rgba(18, 73, 160, 0.15))'
                 }}
               />
             </div>
