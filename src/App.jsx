@@ -36,18 +36,7 @@ export function App() {
       padding: '2rem 1rem',
       position: 'relative'
     }}>
-      {/* Discreet Google Sheet Settings Button (Top Right Corner) */}
-      <div style={{ position: 'fixed', top: '1.25rem', right: '1.25rem', zIndex: 40 }}>
-        <button
-          onClick={() => setIsSyncModalOpen(true)}
-          className="btn btn-secondary btn-sm"
-          style={{ background: 'rgba(15,23,42,0.7)', backdropFilter: 'blur(10px)', border: '1px solid var(--border-color)' }}
-          title="Google Sheet Integration"
-        >
-          <Settings size={15} color={scriptUrl ? '#34d399' : '#94a3b8'} />
-          <span style={{ fontSize: '0.8rem' }}>{scriptUrl ? 'Sheet Synced' : 'Connect Sheet'}</span>
-        </button>
-      </div>
+
 
       {/* Main Container Card */}
       <div style={{ width: '100%', maxWidth: activeTab === 'admin' ? '1000px' : '540px', margin: '0 auto' }}>
