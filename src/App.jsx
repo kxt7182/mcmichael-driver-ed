@@ -45,21 +45,21 @@ export function App() {
         
         {/* App Title Header inside card context */}
         {activeTab !== 'admin' && (
-          <div style={{ textAlign: 'center', marginBottom: '1.25rem' }}>
-            <div style={{ textAlign: 'center', marginBottom: '0.2rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '-0.5rem', marginTop: '-0.5rem' }}>
               <img
                 src={schoolLogo}
                 alt="McMichael High School Phoenix Logo"
                 style={{
-                  height: '260px',
+                  height: '270px',
                   width: 'auto',
                   objectFit: 'contain',
                   margin: '0 auto',
-                  filter: 'drop-shadow(0 6px 16px rgba(18, 73, 160, 0.15))'
+                  filter: 'drop-shadow(0 6px 16px rgba(18, 73, 160, 0.12))'
                 }}
               />
             </div>
-            <h1 style={{ fontSize: '2.2rem', fontWeight: '800', marginBottom: '0.3rem', letterSpacing: '-0.02em' }}>
+            <h1 style={{ fontSize: '2.1rem', fontWeight: '800', marginBottom: '0.25rem', letterSpacing: '-0.02em', marginTop: '0' }}>
               McMichael Driver Education <br /><span className="gradient-text">Contact List</span>
             </h1>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>

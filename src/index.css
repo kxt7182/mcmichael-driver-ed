@@ -1,36 +1,35 @@
-/* McMichael Light Grey & Royal Blue Design System */
+/* McMichael Pure White & Royal Blue Design System */
 
 :root {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-display: 'Outfit', system-ui, -apple-system, sans-serif;
 
-  /* Color Palette - McMichael High Royal Blue & Neutral Light Grey */
-  --bg-main: #f3f4f6;
+  /* Color Palette - Pure White Background & McMichael Royal Blue */
+  --bg-main: #ffffff;
   --bg-card: #ffffff;
-  --bg-card-hover: #ffffff;
-  --bg-input: #ffffff;
-  --border-color: #e5e7eb;
+  --bg-input: #f8fafc;
+  --border-color: #e2e8f0;
   --border-color-active: #1249a0;
 
   --primary: #1249a0;
   --primary-hover: #0c3577;
-  --primary-glow: rgba(18, 73, 160, 0.2);
+  --primary-glow: rgba(18, 73, 160, 0.18);
 
   --secondary: #3b82f6;
 
   --accent-success: #10b981;
   --accent-danger: #e11d48;
 
-  --text-main: #111827;
-  --text-muted: #4b5563;
-  --text-dim: #6b7280;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-dim: #64748b;
 
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 24px;
   --radius-full: 9999px;
 
-  --shadow-card: 0 20px 40px -15px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(229, 231, 235, 0.8);
+  --shadow-card: 0 20px 40px -15px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.9);
   --shadow-glow: 0 10px 25px rgba(18, 73, 160, 0.25);
 
   --transition-fast: 0.15s ease;
@@ -46,15 +45,11 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: #f3f4f6;
+  background-color: #ffffff;
   color: var(--text-main);
   min-height: 100vh;
   line-height: 1.6;
   overflow-x: hidden;
-  background-image: 
-    radial-gradient(circle at 10% 10%, rgba(18, 73, 160, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 90% 85%, rgba(17, 24, 39, 0.04) 0%, transparent 45%);
-  background-attachment: fixed;
 }
 
 #root {
@@ -66,7 +61,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.2;
   color: var(--text-main);
 }
 
@@ -90,7 +85,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #e5e7eb;
+  background: #f1f5f9;
   padding: 4px;
   border-radius: var(--radius-full);
 }
@@ -122,11 +117,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Cards */
 .glass-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  padding: 2.25rem;
+  padding: 1.5rem 2rem 2rem 2rem;
   transition: var(--transition-normal);
 }
 
@@ -136,7 +131,7 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  padding: 0.8rem 1.6rem;
+  padding: 0.85rem 1.6rem;
   border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 700;
@@ -160,13 +155,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-secondary {
-  background: #e5e7eb;
+  background: #f1f5f9;
   color: var(--text-main);
-  border: 1px solid #d1d5db;
+  border: 1px solid #cbd5e1;
 }
 
 .btn-secondary:hover {
-  background: #d1d5db;
+  background: #e2e8f0;
 }
 
 .btn-danger {
@@ -212,31 +207,35 @@ h1, h2, h3, h4, h5, h6 {
 
 .input-icon {
   position: absolute;
-  left: 1rem;
-  color: var(--text-dim);
+  left: 1.1rem;
+  color: #1249a0;
   pointer-events: none;
 }
 
+/* Email Input Bubble */
 .form-input {
   width: 100%;
-  padding: 0.85rem 1rem 0.85rem 2.8rem;
-  background-color: var(--bg-input);
-  border: 1.5px solid var(--border-color);
+  padding: 0.9rem 1rem 0.9rem 3rem;
+  background-color: #f0f7ff;
+  border: 2px solid #bfdbfe;
   border-radius: var(--radius-md);
-  color: var(--text-main);
-  font-size: 1rem;
+  color: #0f172a;
+  font-size: 1.05rem;
+  font-weight: 600;
   font-family: var(--font-sans);
   transition: var(--transition-fast);
 }
 
 .form-input:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-glow);
+  background-color: #ffffff;
+  border-color: #1249a0;
+  box-shadow: 0 0 0 4px rgba(18, 73, 160, 0.18);
 }
 
 .form-input::placeholder {
-  color: #9ca3af;
+  color: #94a3b8;
+  font-weight: 400;
 }
 
 /* Modal Overlay */
@@ -244,7 +243,7 @@ h1, h2, h3, h4, h5, h6 {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(17, 24, 39, 0.5);
+  background: rgba(15, 23, 42, 0.5);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -261,7 +260,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   padding: 2rem;
   color: var(--text-main);
 }
