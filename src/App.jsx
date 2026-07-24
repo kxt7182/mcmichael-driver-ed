@@ -6,6 +6,8 @@ import { AdminDashboard } from './components/AdminDashboard';
 import { getGoogleScriptUrl } from './services/storageService';
 import { Car, Settings, UserCheck, UserMinus, ShieldCheck, Database } from 'lucide-react';
 
+import schoolLogo from './assets/school-logo.png';
+
 export function App() {
   const [activeTab, setActiveTab] = useState('subscribe'); // 'subscribe' | 'unsubscribe' | 'admin'
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
@@ -44,19 +46,18 @@ export function App() {
         {/* App Title Header inside card context */}
         {activeTab !== 'admin' && (
           <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-            <div style={{
-              width: '56px',
-              height: '56px',
-              borderRadius: '16px',
-              background: 'linear-gradient(135deg, #38bdf8, #6366f1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              margin: '0 auto 1rem auto',
-              boxShadow: '0 0 20px rgba(56, 189, 248, 0.3)'
-            }}>
-              <Car size={30} />
+            <div style={{ textAlign: 'center', marginBottom: '0.75rem' }}>
+              <img
+                src={schoolLogo}
+                alt="McMichael High School Phoenix Logo"
+                style={{
+                  height: '115px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  margin: '0 auto',
+                  filter: 'drop-shadow(0 6px 16px rgba(15, 23, 42, 0.1))'
+                }}
+              />
             </div>
             <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.4rem', letterSpacing: '-0.02em' }}>
               McMichael Driver Education <br /><span className="gradient-text">Contact List</span>
