@@ -1,4 +1,4 @@
-// Storage & API Sync Service for Driver Ed Email Alerts (With 1-Year Auto-Unsubscribe)
+// Storage & API Sync Service for Driver Ed Email Alerts (With Removal Method: User Opt-Out vs Expired)
 
 const LOCAL_STORAGE_KEY = 'driver_ed_emails_v2';
 const GOOGLE_SCRIPT_URL_KEY = 'driver_ed_google_script_url';
@@ -11,6 +11,7 @@ const INITIAL_DEMO_SUBSCRIBERS = [
     status: 'ACTIVE',
     createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
     unsubscribeDate: null,
+    removalMethod: null,
   }
 ];
 
@@ -40,7 +41,8 @@ export const autoPruneLocalSubscribers = (subscribers) => {
         return {
           ...sub,
           status: 'UNSUBSCRIBED',
-          unsubscribeDate: new Date().toISOString()
+          unsubscribeDate: new Date().toISOString(),
+          removalMethod: 'Expired'
         };
       }
     }
@@ -128,6 +130,7 @@ export const subscribeUser = async ({ email }) => {
         status: 'ACTIVE',
         createdAt: new Date().toISOString(),
         unsubscribeDate: null,
+        removalMethod: null,
       };
       updatedList[existingIndex] = subscriberObj;
       saveSubscribersToLocal(updatedList);
@@ -141,6 +144,7 @@ export const subscribeUser = async ({ email }) => {
       status: 'ACTIVE',
       createdAt: new Date().toISOString(),
       unsubscribeDate: null,
+      removalMethod: null,
     };
     updatedList.unshift(subscriberObj);
     saveSubscribersToLocal(updatedList);
@@ -154,7 +158,7 @@ export const subscribeUser = async ({ email }) => {
   };
 };
 
-// Unsubscribe Email
+// Unsubscribe Email with User Opt-Out Method
 export const unsubscribeUser = async ({ email }) => {
   const cleanEmail = email.trim().toLowerCase();
   const subscribers = getSubscribersFromLocal();
@@ -169,6 +173,7 @@ export const unsubscribeUser = async ({ email }) => {
     ...updatedList[existingIndex],
     status: 'UNSUBSCRIBED',
     unsubscribeDate: new Date().toISOString(),
+    removalMethod: 'User Opt-Out',
   };
 
   saveSubscribersToLocal(updatedList);

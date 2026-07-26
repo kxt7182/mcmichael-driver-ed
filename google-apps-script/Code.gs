@@ -1,7 +1,8 @@
 /**
- * McMichael Driver Education Contact List - Google Apps Script with 1-Year Auto-Unsubscribe
+ * McMichael Driver Education Contact List - Google Apps Script
  * Tab 1: "Subscribers" (Columns: Date Added, Time Added, Email)
- * Tab 2: "Unsubscribed" (Columns: Date Removed, Time Removed, Email)
+ * Tab 2: "Unsubscribed" (Columns: Date Removed, Time Removed, Email, Removal Method)
+ * Removal Method: "User Opt-Out" vs "Expired"
  */
 
 function getOrCreateSheet(ss, sheetName, headers) {
@@ -20,7 +21,7 @@ function getOrCreateSheet(ss, sheetName, headers) {
 function setupWorkbook() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   getOrCreateSheet(ss, "Subscribers", ["Date Added", "Time Added", "Email"]);
-  getOrCreateSheet(ss, "Unsubscribed", ["Date Removed", "Time Removed", "Email"]);
+  getOrCreateSheet(ss, "Unsubscribed", ["Date Removed", "Time Removed", "Email", "Removal Method"]);
 }
 
 function findRowByEmail(sheet, email) {
@@ -53,7 +54,6 @@ function autoPruneOneYearSubscribers(ss) {
 
   var dt = getFormattedDateTime();
 
-  // Iterate backwards from bottom to top so deleting rows does not shift row indices
   for (var i = rows.length - 1; i >= 1; i--) {
     var dateVal = rows[i][0]; // Column A: Date Added
     var email = rows[i][2];   // Column C: Email
@@ -61,13 +61,14 @@ function autoPruneOneYearSubscribers(ss) {
     if (dateVal && email) {
       var dateAdded = new Date(dateVal);
       if (!isNaN(dateAdded.getTime()) && dateAdded < oneYearAgo) {
-        // 1. Delete from Subscribers sheet
         activeSheet.deleteRow(i + 1);
-
-        // 2. Move to Unsubscribed sheet if not already there
         var unsubRow = findRowByEmail(unsubSheet, email);
         if (unsubRow === -1) {
-          unsubSheet.appendRow([dt.date, dt.time, email]);
+          unsubSheet.appendRow([dt.date, dt.time, email, "Expired"]);
+        } else {
+          unsubSheet.getRange(unsubRow, 1).setValue(dt.date);
+          unsubSheet.getRange(unsubRow, 2).setValue(dt.time);
+          unsubSheet.getRange(unsubRow, 4).setValue("Expired");
         }
       }
     }
@@ -77,8 +78,6 @@ function autoPruneOneYearSubscribers(ss) {
 function processAction(action, emailStr) {
   setupWorkbook();
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  
-  // Always auto-prune subscribers older than 1 year
   autoPruneOneYearSubscribers(ss);
 
   var activeSheet = ss.getSheetByName("Subscribers");
@@ -115,13 +114,14 @@ function processAction(action, emailStr) {
       activeSheet.deleteRow(activeRow);
     }
 
-    // 2. Add or update in Unsubscribed tab
+    // 2. Add or update in Unsubscribed tab with "User Opt-Out"
     var unsubRow = findRowByEmail(unsubSheet, email);
     if (unsubRow > -1) {
       unsubSheet.getRange(unsubRow, 1).setValue(dt.date);
       unsubSheet.getRange(unsubRow, 2).setValue(dt.time);
+      unsubSheet.getRange(unsubRow, 4).setValue("User Opt-Out");
     } else {
-      unsubSheet.appendRow([dt.date, dt.time, email]);
+      unsubSheet.appendRow([dt.date, dt.time, email, "User Opt-Out"]);
     }
 
     return { success: true, message: "Moved to Unsubscribed tab" };
