@@ -71,7 +71,7 @@ export function SubscribeForm({ onClose }) {
 
             <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>You're Subscribed!</h2>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '1rem' }}>
-              <strong style={{ color: '#1249a0' }}>{submittedData.subscriber.email}</strong> has been added to the McMichael Driver Education contact list.
+              <strong style={{ color: '#1249a0' }}>{submittedData.subscriber.email}</strong> has been added to the McMichael Driver Education contact list. When updates are available you will be notified.
             </p>
 
             <button
