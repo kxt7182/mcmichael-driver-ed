@@ -1,4 +1,4 @@
-// Storage & API Sync Service for Driver Ed Email Alerts (Simplified & Reliable Google Sheet Sync)
+// Storage & API Sync Service for Driver Ed Email Alerts (Duplicate Protection)
 
 const LOCAL_STORAGE_KEY = 'driver_ed_emails_v2';
 const GOOGLE_SCRIPT_URL_KEY = 'driver_ed_google_script_url';
@@ -10,13 +10,6 @@ const INITIAL_DEMO_SUBSCRIBERS = [
     email: 'alex.rivera@example.com',
     status: 'ACTIVE',
     createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-    unsubscribeDate: null,
-  },
-  {
-    id: 'sub-2',
-    email: 'sarah.c@example.com',
-    status: 'ACTIVE',
-    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
     unsubscribeDate: null,
   }
 ];
@@ -60,7 +53,6 @@ export const sendToGoogleSheet = async (action, data) => {
   const payloadStr = JSON.stringify({ action, data });
 
   try {
-    // 1. Send via mode: 'no-cors' fetch (bypasses browser CORS blocks)
     await fetch(scriptUrl, {
       method: 'POST',
       mode: 'no-cors',
@@ -70,23 +62,20 @@ export const sendToGoogleSheet = async (action, data) => {
       body: payloadStr,
     });
 
-    // 2. Also send via GET URL parameter fallback for 100% delivery guarantee
     const params = new URLSearchParams({
       action: action,
       email: data.email || '',
     });
     
-    // Silent ping fallback
     fetch(`${scriptUrl}?${params.toString()}`, { mode: 'no-cors' }).catch(() => {});
 
     return { success: true, message: 'Sent to Google Sheet!' };
   } catch (err) {
-    console.warn('Google Sheet fetch warning:', err);
     return { success: true, isLocalFallback: true, message: 'Recorded locally.' };
   }
 };
 
-// Subscribe Email
+// Subscribe Email with Duplicate Check
 export const subscribeUser = async ({ email }) => {
   const cleanEmail = email.trim().toLowerCase();
   const subscribers = getSubscribersFromLocal();
@@ -94,16 +83,27 @@ export const subscribeUser = async ({ email }) => {
 
   let updatedList = [...subscribers];
   let subscriberObj;
+  let isAlreadyActive = false;
 
   if (existingIndex > -1) {
-    subscriberObj = {
-      ...subscribers[existingIndex],
-      status: 'ACTIVE',
-      createdAt: new Date().toISOString(),
-      unsubscribeDate: null,
-    };
-    updatedList[existingIndex] = subscriberObj;
+    const existing = subscribers[existingIndex];
+    if (existing.status === 'ACTIVE') {
+      isAlreadyActive = true;
+      subscriberObj = existing;
+    } else {
+      // Re-activating a previously unsubscribed email
+      subscriberObj = {
+        ...existing,
+        status: 'ACTIVE',
+        createdAt: new Date().toISOString(),
+        unsubscribeDate: null,
+      };
+      updatedList[existingIndex] = subscriberObj;
+      saveSubscribersToLocal(updatedList);
+      await sendToGoogleSheet('SUBSCRIBE', { email: cleanEmail });
+    }
   } else {
+    // New email subscription
     subscriberObj = {
       id: 'sub-' + Date.now(),
       email: cleanEmail,
@@ -112,15 +112,14 @@ export const subscribeUser = async ({ email }) => {
       unsubscribeDate: null,
     };
     updatedList.unshift(subscriberObj);
+    saveSubscribersToLocal(updatedList);
+    await sendToGoogleSheet('SUBSCRIBE', { email: cleanEmail });
   }
-
-  saveSubscribersToLocal(updatedList);
-  const apiResult = await sendToGoogleSheet('SUBSCRIBE', { email: cleanEmail });
 
   return {
     subscriber: subscriberObj,
+    isAlreadyActive,
     isNew: existingIndex === -1,
-    apiResult,
   };
 };
 

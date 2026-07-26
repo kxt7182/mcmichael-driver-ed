@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Check, Sparkles, Info, Edit2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Mail, Check, Info, Edit2, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { subscribeUser } from '../services/storageService';
 
@@ -36,13 +36,15 @@ export function SubscribeForm({ onClose }) {
       setLoading(false);
       setSubmittedData(result);
 
-      try {
-        confetti({
-          particleCount: 70,
-          spread: 60,
-          origin: { y: 0.6 }
-        });
-      } catch (err) {}
+      if (!result.isAlreadyActive) {
+        try {
+          confetti({
+            particleCount: 70,
+            spread: 60,
+            origin: { y: 0.6 }
+          });
+        } catch (err) {}
+      }
     } catch (err) {
       setLoading(false);
       setErrorMsg('Failed to process subscription. Please try again.');
@@ -59,19 +61,30 @@ export function SubscribeForm({ onClose }) {
               width: '64px',
               height: '64px',
               borderRadius: '50%',
-              background: 'rgba(16, 185, 129, 0.15)',
-              color: '#10b981',
+              background: submittedData.isAlreadyActive ? 'rgba(18, 73, 160, 0.12)' : 'rgba(16, 185, 129, 0.15)',
+              color: submittedData.isAlreadyActive ? '#1249a0' : '#10b981',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 1.25rem auto'
             }}>
-              <Check size={36} />
+              {submittedData.isAlreadyActive ? <Info size={36} /> : <Check size={36} />}
             </div>
 
-            <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>You're Subscribed!</h2>
+            <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>
+              {submittedData.isAlreadyActive ? "Already Subscribed!" : "You're Subscribed!"}
+            </h2>
+
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '1rem' }}>
-              <strong style={{ color: '#1249a0' }}>{submittedData.subscriber.email}</strong> has been added to the McMichael Driver Education contact list. When updates are available you will be notified.
+              {submittedData.isAlreadyActive ? (
+                <>
+                  <strong style={{ color: '#1249a0' }}>{submittedData.subscriber.email}</strong> is already on the McMichael Driver Education contact list and receiving class notifications.
+                </>
+              ) : (
+                <>
+                  <strong style={{ color: '#1249a0' }}>{submittedData.subscriber.email}</strong> has been added to the McMichael Driver Education contact list. When updates are available you will be notified.
+                </>
+              )}
             </p>
 
             <button
