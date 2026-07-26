@@ -1,4 +1,4 @@
-// Storage & API Sync Service for Driver Ed Email Alerts (Duplicate Protection)
+// Storage & API Sync Service for Driver Ed Email Alerts (With 1-Year Auto-Unsubscribe)
 
 const LOCAL_STORAGE_KEY = 'driver_ed_emails_v2';
 const GOOGLE_SCRIPT_URL_KEY = 'driver_ed_google_script_url';
@@ -26,6 +26,33 @@ export const setGoogleScriptUrl = (url) => {
   }
 };
 
+// Auto-prune emails older than 1 year (365 days)
+export const autoPruneLocalSubscribers = (subscribers) => {
+  const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+  const now = Date.now();
+  let modified = false;
+
+  const updated = subscribers.map((sub) => {
+    if (sub.status === 'ACTIVE' && sub.createdAt) {
+      const createdTime = new Date(sub.createdAt).getTime();
+      if (!isNaN(createdTime) && (now - createdTime) >= ONE_YEAR_MS) {
+        modified = true;
+        return {
+          ...sub,
+          status: 'UNSUBSCRIBED',
+          unsubscribeDate: new Date().toISOString()
+        };
+      }
+    }
+    return sub;
+  });
+
+  if (modified) {
+    saveSubscribersToLocal(updated);
+  }
+  return updated;
+};
+
 export const getSubscribersFromLocal = () => {
   try {
     const data = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -33,7 +60,8 @@ export const getSubscribersFromLocal = () => {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(INITIAL_DEMO_SUBSCRIBERS));
       return INITIAL_DEMO_SUBSCRIBERS;
     }
-    return JSON.parse(data);
+    const list = JSON.parse(data);
+    return autoPruneLocalSubscribers(list);
   } catch (err) {
     return INITIAL_DEMO_SUBSCRIBERS;
   }
@@ -75,7 +103,7 @@ export const sendToGoogleSheet = async (action, data) => {
   }
 };
 
-// Subscribe Email with Duplicate Check
+// Subscribe Email with Duplicate & 1-Year Check
 export const subscribeUser = async ({ email }) => {
   const cleanEmail = email.trim().toLowerCase();
   const subscribers = getSubscribersFromLocal();
@@ -87,11 +115,14 @@ export const subscribeUser = async ({ email }) => {
 
   if (existingIndex > -1) {
     const existing = subscribers[existingIndex];
-    if (existing.status === 'ACTIVE') {
+    const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+    const isExpired = existing.createdAt && (Date.now() - new Date(existing.createdAt).getTime() >= ONE_YEAR_MS);
+
+    if (existing.status === 'ACTIVE' && !isExpired) {
       isAlreadyActive = true;
       subscriberObj = existing;
     } else {
-      // Re-activating a previously unsubscribed email
+      // Re-activating a previously unsubscribed or 1-year expired email
       subscriberObj = {
         ...existing,
         status: 'ACTIVE',

@@ -3,7 +3,7 @@ import { X, Database, Check, Copy, ExternalLink, RefreshCw, AlertTriangle, Shiel
 import { getGoogleScriptUrl, setGoogleScriptUrl } from '../services/storageService';
 
 const SCRIPT_CODE_SNIPPET = `/**
- * McMichael Driver Education Contact List - Clean Google Apps Script
+ * McMichael Driver Education Contact List - Google Apps Script with 1-Year Auto-Unsubscribe
  * Tab 1: "Subscribers" (Columns: Date Added, Time Added, Email)
  * Tab 2: "Unsubscribed" (Columns: Date Removed, Time Removed, Email)
  */
@@ -45,9 +45,33 @@ function getFormattedDateTime() {
   return { date: dateStr, time: timeStr };
 }
 
+function autoPruneOneYearSubscribers(ss) {
+  setupWorkbook();
+  var activeSheet = ss.getSheetByName("Subscribers");
+  var unsubSheet = ss.getSheetByName("Unsubscribed");
+  var rows = activeSheet.getDataRange().getValues();
+  var oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+  var dt = getFormattedDateTime();
+
+  for (var i = rows.length - 1; i >= 1; i--) {
+    var dateVal = rows[i][0];
+    var email = rows[i][2];
+    if (dateVal && email) {
+      var dateAdded = new Date(dateVal);
+      if (!isNaN(dateAdded.getTime()) && dateAdded < oneYearAgo) {
+        activeSheet.deleteRow(i + 1);
+        var unsubRow = findRowByEmail(unsubSheet, email);
+        if (unsubRow === -1) unsubSheet.appendRow([dt.date, dt.time, email]);
+      }
+    }
+  }
+}
+
 function processAction(action, emailStr) {
   setupWorkbook();
   var ss = SpreadsheetApp.getActiveSpreadsheet();
+  autoPruneOneYearSubscribers(ss);
   var activeSheet = ss.getSheetByName("Subscribers");
   var unsubSheet = ss.getSheetByName("Unsubscribed");
   var email = (emailStr || "").trim().toLowerCase();
@@ -112,6 +136,8 @@ function doPost(e) {
 function doGet(e) {
   if (e && e.parameter && e.parameter.action && e.parameter.email) {
     processAction(e.parameter.action, e.parameter.email);
+  } else {
+    autoPruneOneYearSubscribers(SpreadsheetApp.getActiveSpreadsheet());
   }
   return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);
 }`;

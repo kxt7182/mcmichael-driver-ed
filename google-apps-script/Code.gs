@@ -1,5 +1,5 @@
 /**
- * McMichael Driver Education Contact List - Clean Google Apps Script
+ * McMichael Driver Education Contact List - Google Apps Script with 1-Year Auto-Unsubscribe
  * Tab 1: "Subscribers" (Columns: Date Added, Time Added, Email)
  * Tab 2: "Unsubscribed" (Columns: Date Removed, Time Removed, Email)
  */
@@ -42,9 +42,45 @@ function getFormattedDateTime() {
   return { date: dateStr, time: timeStr };
 }
 
+// Auto-unsubscribe subscribers who have been on the list for 1 year (365 days)
+function autoPruneOneYearSubscribers(ss) {
+  setupWorkbook();
+  var activeSheet = ss.getSheetByName("Subscribers");
+  var unsubSheet = ss.getSheetByName("Unsubscribed");
+  var rows = activeSheet.getDataRange().getValues();
+  var oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+  var dt = getFormattedDateTime();
+
+  // Iterate backwards from bottom to top so deleting rows does not shift row indices
+  for (var i = rows.length - 1; i >= 1; i--) {
+    var dateVal = rows[i][0]; // Column A: Date Added
+    var email = rows[i][2];   // Column C: Email
+
+    if (dateVal && email) {
+      var dateAdded = new Date(dateVal);
+      if (!isNaN(dateAdded.getTime()) && dateAdded < oneYearAgo) {
+        // 1. Delete from Subscribers sheet
+        activeSheet.deleteRow(i + 1);
+
+        // 2. Move to Unsubscribed sheet if not already there
+        var unsubRow = findRowByEmail(unsubSheet, email);
+        if (unsubRow === -1) {
+          unsubSheet.appendRow([dt.date, dt.time, email]);
+        }
+      }
+    }
+  }
+}
+
 function processAction(action, emailStr) {
   setupWorkbook();
   var ss = SpreadsheetApp.getActiveSpreadsheet();
+  
+  // Always auto-prune subscribers older than 1 year
+  autoPruneOneYearSubscribers(ss);
+
   var activeSheet = ss.getSheetByName("Subscribers");
   var unsubSheet = ss.getSheetByName("Unsubscribed");
   var email = (emailStr || "").trim().toLowerCase();
@@ -126,6 +162,9 @@ function doPost(e) {
 function doGet(e) {
   if (e && e.parameter && e.parameter.action && e.parameter.email) {
     processAction(e.parameter.action, e.parameter.email);
+  } else {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    autoPruneOneYearSubscribers(ss);
   }
 
   setupWorkbook();
