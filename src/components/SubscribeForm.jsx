@@ -83,7 +83,7 @@ export function SubscribeForm({ onClose }) {
                 </>
               ) : (
                 <>
-                  <strong style={{ color: '#1249a0' }}>{submittedData.subscriber.email}</strong> has been added to the McMichael Driver Education contact list. When updates are available you will be notified.
+                  <strong style={{ color: '#1249a0' }}>{submittedData.subscriber.email}</strong> has been added to the McMichael Driver Education Contact List. When updates are available you will be notified.
                 </>
               )}
             </p>

@@ -99,7 +99,7 @@ export function UnsubscribePortal({ initialEmail = '', onClose }) {
             </div>
 
             <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
-              Enter your email address below to remove yourself from the contact list.
+              Enter your email address below to remove yourself from the Contact List.
             </p>
 
             <form onSubmit={handleInitialClick}>
@@ -169,7 +169,7 @@ export function UnsubscribePortal({ initialEmail = '', onClose }) {
 
               <h3 style={{ fontSize: '1.35rem', marginBottom: '0.5rem' }}>Confirm Unsubscribe</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
-                Are you sure you want to remove this email address from the McMichael Driver Education contact list?
+                Are you sure you want to remove this email address from the McMichael Driver Education Contact List?
               </p>
 
               <div style={{
