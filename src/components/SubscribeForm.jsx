@@ -84,7 +84,7 @@ export function SubscribeForm({ onClose }) {
         ) : (
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-              <h3 style={{ fontSize: '1.35rem', fontWeight: '800', color: '#1249a0' }}>Subscribe to the McMichael Driver Education Contact List</h3>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: '800', color: '#1249a0' }}>Subscribe to the Contact List</h3>
               <button
                 type="button"
                 onClick={onClose}
