@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Check, Info, Edit2, ArrowRight } from 'lucide-react';
+import { Mail, Check, AlertCircle, Edit2, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { subscribeUser } from '../services/storageService';
 
@@ -68,7 +68,7 @@ export function SubscribeForm({ onClose }) {
               justifyContent: 'center',
               margin: '0 auto 1.25rem auto'
             }}>
-              {submittedData.isAlreadyActive ? <Info size={36} /> : <Check size={36} />}
+              {submittedData.isAlreadyActive ? <AlertCircle size={36} /> : <Check size={36} />}
             </div>
 
             <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>
