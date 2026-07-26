@@ -3,9 +3,9 @@ import { X, Database, Check, Copy, ExternalLink, RefreshCw, AlertTriangle, Shiel
 import { getGoogleScriptUrl, setGoogleScriptUrl } from '../services/storageService';
 
 const SCRIPT_CODE_SNIPPET = `/**
- * McMichael Driver Education Contact List - Multi-Tab Google Apps Script
- * Tab 1: "Subscribers" (Active)
- * Tab 2: "Unsubscribed" (Self-service removals)
+ * McMichael Driver Education Contact List - Clean Date & Time Formatting
+ * Tab 1: "Subscribers" (Columns: Date Added, Time Added, Email, Status)
+ * Tab 2: "Unsubscribed" (Columns: Date Removed, Time Removed, Email)
  */
 
 function getOrCreateSheet(ss, sheetName, headers) {
@@ -15,7 +15,7 @@ function getOrCreateSheet(ss, sheetName, headers) {
   }
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(headers);
-    sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold").setBackground("#1e293b").setFontColor("#ffffff");
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold").setBackground("#1249a0").setFontColor("#ffffff");
     sheet.setFrozenRows(1);
   }
   return sheet;
@@ -23,18 +23,26 @@ function getOrCreateSheet(ss, sheetName, headers) {
 
 function setupWorkbook() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  getOrCreateSheet(ss, "Subscribers", ["Timestamp", "Email", "Status"]);
-  getOrCreateSheet(ss, "Unsubscribed", ["Timestamp", "Email", "Unsubscribe Date"]);
+  getOrCreateSheet(ss, "Subscribers", ["Date Added", "Time Added", "Email", "Status"]);
+  getOrCreateSheet(ss, "Unsubscribed", ["Date Removed", "Time Removed", "Email"]);
 }
 
 function findRowByEmail(sheet, email) {
   var rows = sheet.getDataRange().getValues();
   for (var i = 1; i < rows.length; i++) {
-    if (rows[i][1] && String(rows[i][1]).trim().toLowerCase() === email) {
+    if (rows[i][2] && String(rows[i][2]).trim().toLowerCase() === email) {
       return i + 1;
     }
   }
   return -1;
+}
+
+function getFormattedDateTime() {
+  var now = new Date();
+  var tz = Session.getScriptTimeZone() || "America/New_York";
+  var dateStr = Utilities.formatDate(now, tz, "MM/dd/yyyy");
+  var timeStr = Utilities.formatDate(now, tz, "hh:mm a");
+  return { date: dateStr, time: timeStr };
 }
 
 function processAction(action, emailStr) {
@@ -46,7 +54,7 @@ function processAction(action, emailStr) {
 
   if (!email) return { success: false, message: "Email is required" };
 
-  var nowStr = new Date().toISOString();
+  var dt = getFormattedDateTime();
 
   if (action === "SUBSCRIBE") {
     var oldUnsubRow = findRowByEmail(unsubSheet, email);
@@ -54,10 +62,11 @@ function processAction(action, emailStr) {
 
     var activeRow = findRowByEmail(activeSheet, email);
     if (activeRow > -1) {
-      activeSheet.getRange(activeRow, 1).setValue(nowStr);
-      activeSheet.getRange(activeRow, 3).setValue("ACTIVE");
+      activeSheet.getRange(activeRow, 1).setValue(dt.date);
+      activeSheet.getRange(activeRow, 2).setValue(dt.time);
+      activeSheet.getRange(activeRow, 4).setValue("ACTIVE");
     } else {
-      activeSheet.appendRow([nowStr, email, "ACTIVE"]);
+      activeSheet.appendRow([dt.date, dt.time, email, "ACTIVE"]);
     }
     return { success: true, message: "Subscribed" };
   } else if (action === "UNSUBSCRIBE") {
@@ -66,9 +75,10 @@ function processAction(action, emailStr) {
 
     var unsubRow = findRowByEmail(unsubSheet, email);
     if (unsubRow > -1) {
-      unsubSheet.getRange(unsubRow, 3).setValue(nowStr);
+      unsubSheet.getRange(unsubRow, 1).setValue(dt.date);
+      unsubSheet.getRange(unsubRow, 2).setValue(dt.time);
     } else {
-      unsubSheet.appendRow([nowStr, email, nowStr]);
+      unsubSheet.appendRow([dt.date, dt.time, email]);
     }
     return { success: true, message: "Unsubscribed" };
   }
