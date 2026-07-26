@@ -108,7 +108,7 @@ export function SubscribeForm({ onClose }) {
             </div>
 
             <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
-              Enter your email address below to receive notifications when new driver education classes open.
+              Enter your email address below to subscribe
             </p>
 
             <form onSubmit={handleInitialClick}>
