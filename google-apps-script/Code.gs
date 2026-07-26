@@ -1,6 +1,6 @@
 /**
- * McMichael Driver Education Contact List - Clean Date & Time Formatting
- * Tab 1: "Subscribers" (Columns: Date Added, Time Added, Email, Status)
+ * McMichael Driver Education Contact List - Clean Google Apps Script
+ * Tab 1: "Subscribers" (Columns: Date Added, Time Added, Email)
  * Tab 2: "Unsubscribed" (Columns: Date Removed, Time Removed, Email)
  */
 
@@ -19,7 +19,7 @@ function getOrCreateSheet(ss, sheetName, headers) {
 
 function setupWorkbook() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  getOrCreateSheet(ss, "Subscribers", ["Date Added", "Time Added", "Email", "Status"]);
+  getOrCreateSheet(ss, "Subscribers", ["Date Added", "Time Added", "Email"]);
   getOrCreateSheet(ss, "Unsubscribed", ["Date Removed", "Time Removed", "Email"]);
 }
 
@@ -38,7 +38,7 @@ function getFormattedDateTime() {
   var now = new Date();
   var tz = Session.getScriptTimeZone() || "America/New_York";
   var dateStr = Utilities.formatDate(now, tz, "MM/dd/yyyy");
-  var timeStr = Utilities.formatDate(now, tz, "hh:mm a"); // e.g. "04:41 AM" (Hour:Minute AM/PM)
+  var timeStr = Utilities.formatDate(now, tz, "hh:mm a"); // e.g. "04:41 AM"
   return { date: dateStr, time: timeStr };
 }
 
@@ -65,9 +65,8 @@ function processAction(action, emailStr) {
     if (activeRow > -1) {
       activeSheet.getRange(activeRow, 1).setValue(dt.date);
       activeSheet.getRange(activeRow, 2).setValue(dt.time);
-      activeSheet.getRange(activeRow, 4).setValue("ACTIVE");
     } else {
-      activeSheet.appendRow([dt.date, dt.time, email, "ACTIVE"]);
+      activeSheet.appendRow([dt.date, dt.time, email]);
     }
 
     return { success: true, message: "Added to Subscribers tab" };
@@ -139,8 +138,7 @@ function doGet(e) {
     subscribers.push({
       dateAdded: rows[i][0],
       timeAdded: rows[i][1],
-      email: rows[i][2],
-      status: rows[i][3]
+      email: rows[i][2]
     });
   }
 
