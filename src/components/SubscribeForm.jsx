@@ -79,7 +79,7 @@ export function SubscribeForm({ onClose }) {
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '1rem' }}>
               {submittedData.isAlreadyActive ? (
                 <>
-                  <strong style={{ color: '#1249a0' }}>{submittedData.subscriber.email}</strong> is already on the McMichael Driver Education contact list and receiving class notifications.
+                  <strong style={{ color: '#1249a0' }}>{submittedData.subscriber.email}</strong> is already subscribed to the McMichael Driver Education Contact List and receiving notifications.
                 </>
               ) : (
                 <>
