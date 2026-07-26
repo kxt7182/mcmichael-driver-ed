@@ -24,9 +24,8 @@ export function SubscribeForm({ onClose }) {
     setShowConfirmModal(true);
   };
 
-  // Final confirmation submit
+  // Final confirmation submit - stays on confirmation screen during loading
   const executeSubmit = async () => {
-    setShowConfirmModal(false);
     setLoading(true);
     const cleanEmail = email.trim().toLowerCase();
 
@@ -34,6 +33,7 @@ export function SubscribeForm({ onClose }) {
       const result = await subscribeUser({ email: cleanEmail });
 
       setLoading(false);
+      setShowConfirmModal(false); // Close confirm modal only after response is ready
       setSubmittedData(result);
 
       if (!result.isAlreadyActive) {
@@ -47,6 +47,7 @@ export function SubscribeForm({ onClose }) {
       }
     } catch (err) {
       setLoading(false);
+      setShowConfirmModal(false);
       setErrorMsg('Failed to process subscription. Please try again.');
     }
   };
@@ -148,11 +149,10 @@ export function SubscribeForm({ onClose }) {
                 </button>
                 <button
                   type="submit"
-                  disabled={loading}
                   className="btn btn-primary"
                   style={{ flex: 1.5 }}
                 >
-                  {loading ? 'Processing...' : 'Next'}
+                  Next
                 </button>
               </div>
             </form>
@@ -161,7 +161,7 @@ export function SubscribeForm({ onClose }) {
 
         {/* Inner Email Verification Confirmation Modal */}
         {showConfirmModal && (
-          <div className="modal-overlay" onClick={() => setShowConfirmModal(false)}>
+          <div className="modal-overlay" onClick={() => !loading && setShowConfirmModal(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '440px', textAlign: 'center', padding: '2rem' }}>
               <div style={{
                 width: '56px',
@@ -201,6 +201,7 @@ export function SubscribeForm({ onClose }) {
                   type="button"
                   className="btn btn-secondary"
                   style={{ flex: 1 }}
+                  disabled={loading}
                   onClick={() => setShowConfirmModal(false)}
                 >
                   <Edit2 size={16} /> Edit
@@ -209,9 +210,10 @@ export function SubscribeForm({ onClose }) {
                   type="button"
                   className="btn btn-primary"
                   style={{ flex: 1.5 }}
+                  disabled={loading}
                   onClick={executeSubmit}
                 >
-                  Confirm & Submit
+                  {loading ? 'Processing...' : 'Confirm & Submit'}
                 </button>
               </div>
             </div>

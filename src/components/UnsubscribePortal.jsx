@@ -32,14 +32,15 @@ export function UnsubscribePortal({ initialEmail = '', onClose }) {
     setShowConfirmModal(true);
   };
 
+  // Final confirmation unsubscribe - stays on confirmation screen during loading
   const executeUnsubscribe = async () => {
-    setShowConfirmModal(false);
     setLoading(true);
     const emailToProcess = emailInput.trim().toLowerCase();
 
     try {
       const res = await unsubscribeUser({ email: emailToProcess });
       setLoading(false);
+      setShowConfirmModal(false); // Close confirm modal only after response is ready
       if (res.success) {
         setResult(res);
       } else {
@@ -47,6 +48,7 @@ export function UnsubscribePortal({ initialEmail = '', onClose }) {
       }
     } catch (err) {
       setLoading(false);
+      setShowConfirmModal(false);
       setErrorMsg('An error occurred. Please try again.');
     }
   };
@@ -137,11 +139,10 @@ export function UnsubscribePortal({ initialEmail = '', onClose }) {
                 </button>
                 <button
                   type="submit"
-                  disabled={loading}
                   className="btn btn-danger"
                   style={{ flex: 1.5 }}
                 >
-                  {loading ? 'Processing...' : 'Next'}
+                  Next
                 </button>
               </div>
             </form>
@@ -150,7 +151,7 @@ export function UnsubscribePortal({ initialEmail = '', onClose }) {
 
         {/* Confirmation Modal */}
         {showConfirmModal && (
-          <div className="modal-overlay" onClick={() => setShowConfirmModal(false)}>
+          <div className="modal-overlay" onClick={() => !loading && setShowConfirmModal(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '440px', textAlign: 'center', padding: '2rem' }}>
               <div style={{
                 width: '56px',
@@ -190,6 +191,7 @@ export function UnsubscribePortal({ initialEmail = '', onClose }) {
                   type="button"
                   className="btn btn-secondary"
                   style={{ flex: 1 }}
+                  disabled={loading}
                   onClick={() => setShowConfirmModal(false)}
                 >
                   <Edit2 size={16} /> Edit
@@ -198,9 +200,10 @@ export function UnsubscribePortal({ initialEmail = '', onClose }) {
                   type="button"
                   className="btn btn-danger"
                   style={{ flex: 1.5 }}
+                  disabled={loading}
                   onClick={executeUnsubscribe}
                 >
-                  Confirm & Remove
+                  {loading ? 'Processing...' : 'Confirm & Remove'}
                 </button>
               </div>
             </div>
