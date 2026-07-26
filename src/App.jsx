@@ -67,7 +67,7 @@ export function App() {
           {/* Action Buttons: Subscribe or Unsubscribe */}
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button
-              className="btn btn-primary"
+              className="btn btn-success"
               style={{ padding: '0.95rem 2rem', fontSize: '1.1rem', flex: '1 1 180px' }}
               onClick={() => setActiveModal('subscribe')}
               id="btn-main-subscribe"
@@ -76,7 +76,7 @@ export function App() {
             </button>
 
             <button
-              className="btn btn-secondary"
+              className="btn btn-danger"
               style={{ padding: '0.95rem 2rem', fontSize: '1.1rem', flex: '1 1 180px' }}
               onClick={() => setActiveModal('unsubscribe')}
               id="btn-main-unsubscribe"
