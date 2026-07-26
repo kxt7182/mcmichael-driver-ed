@@ -75,7 +75,7 @@ export function UnsubscribePortal({ initialEmail = '', onClose }) {
 
             <h2 style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>Email Removed</h2>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.95rem' }}>
-              <strong style={{ color: '#0f172a' }}>{result.subscriber.email}</strong> has been unsubscribed from driver education course alerts.
+              <strong style={{ color: '#0f172a' }}>{result.subscriber.email}</strong> has been unsubscribed for future notifications.
             </p>
 
             <button
