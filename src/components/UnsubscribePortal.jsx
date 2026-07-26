@@ -86,7 +86,7 @@ export function UnsubscribePortal({ initialEmail = '', onClose }) {
         ) : (
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: '800', color: '#e11d48' }}>Unsubscribe from Contact List</h3>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: '800', color: '#e11d48' }}>Unsubscribe from the McMichael Driver Education Contact List</h3>
               <button
                 type="button"
                 onClick={onClose}
@@ -97,7 +97,7 @@ export function UnsubscribePortal({ initialEmail = '', onClose }) {
             </div>
 
             <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
-              Enter your email address below to remove yourself from our course notification list.
+              Enter your email address below to remove yourself from the contact list.
             </p>
 
             <form onSubmit={handleInitialClick}>
