@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { SubscribeForm } from './components/SubscribeForm';
 import { UnsubscribePortal } from './components/UnsubscribePortal';
-import { GoogleSheetSyncModal } from './components/GoogleSheetSyncModal';
-import { AdminDashboard } from './components/AdminDashboard';
 import { getGoogleScriptUrl } from './services/storageService';
-import { Car, Settings, UserCheck, UserMinus, ShieldCheck, Database } from 'lucide-react';
+import { UserCheck, UserMinus } from 'lucide-react';
 
 import schoolLogo from './assets/school-logo.png';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState('subscribe'); // 'subscribe' | 'unsubscribe' | 'admin'
-  const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
-  const [scriptUrl, setScriptUrl] = useState(getGoogleScriptUrl());
+  const [activeModal, setActiveModal] = useState(null); // null | 'subscribe' | 'unsubscribe'
   const [initialEmail, setInitialEmail] = useState('');
 
-  // Check URL query parameters for direct email unsubscribe link
+  // Check URL query parameters for direct email unsubscribe link e.g. ?action=unsubscribe&email=user@example.com
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const action = params.get('action');
@@ -25,7 +21,7 @@ export function App() {
     }
 
     if (action === 'unsubscribe' || email) {
-      setActiveTab('unsubscribe');
+      setActiveModal('unsubscribe');
     }
   }, []);
 
@@ -39,94 +35,71 @@ export function App() {
       position: 'relative'
     }}>
 
-
-      {/* Main Container Card */}
-      <div style={{ width: '100%', maxWidth: activeTab === 'admin' ? '1000px' : '540px', margin: '0 auto' }}>
-        
-        {/* App Title Header inside card context */}
-        {activeTab !== 'admin' && (
-          <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-            <div style={{ textAlign: 'center', marginBottom: '-0.5rem', marginTop: '-0.5rem' }}>
-              <img
-                src={schoolLogo}
-                alt="McMichael High School Phoenix Logo"
-                style={{
-                  height: '270px',
-                  width: 'auto',
-                  objectFit: 'contain',
-                  margin: '0 auto',
-                  filter: 'drop-shadow(0 6px 16px rgba(18, 73, 160, 0.12))'
-                }}
-              />
-            </div>
-            <h1 style={{ fontSize: '2.1rem', fontWeight: '800', marginBottom: '0.25rem', letterSpacing: '-0.02em', marginTop: '0' }}>
-              McMichael Driver Education <br /><span className="gradient-text">Contact List</span>
-            </h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-              {activeTab === 'subscribe'
-                ? 'Get notified when new driver education classes open.'
-                : 'Remove your email address from our contact list.'}
-            </p>
+      {/* Main Card Container */}
+      <div style={{ width: '100%', maxWidth: '540px', margin: '0 auto' }}>
+        <div className="glass-card" style={{ textAlign: 'center', padding: '2.5rem 2rem' }}>
+          
+          {/* McMichael School Logo */}
+          <div style={{ textAlign: 'center', marginBottom: '-0.5rem', marginTop: '-0.5rem' }}>
+            <img
+              src={schoolLogo}
+              alt="McMichael High School Phoenix Logo"
+              style={{
+                height: '270px',
+                width: 'auto',
+                objectFit: 'contain',
+                margin: '0 auto',
+                filter: 'drop-shadow(0 6px 16px rgba(18, 73, 160, 0.12))'
+              }}
+            />
           </div>
-        )}
 
-        {/* Tab Switcher Pills */}
-        {activeTab !== 'admin' && (
-          <div style={{
-            display: 'flex',
-            background: '#e2e8f0',
-            padding: '4px',
-            borderRadius: '9999px',
-            border: '1px solid var(--border-color)',
-            marginBottom: '1.5rem'
-          }}>
+          {/* Header Title */}
+          <h1 style={{ fontSize: '2.1rem', fontWeight: '800', marginBottom: '0.35rem', letterSpacing: '-0.02em', marginTop: '0' }}>
+            McMichael Driver Education <br /><span className="gradient-text">Contact List</span>
+          </h1>
+
+          {/* Subtitle */}
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '2rem' }}>
+            Get notified when new driver education classes open.
+          </p>
+
+          {/* Action Buttons: Subscribe or Unsubscribe */}
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button
-              className={`nav-tab-btn ${activeTab === 'subscribe' ? 'active' : ''}`}
-              onClick={() => setActiveTab('subscribe')}
-              style={{ flex: 1, justifyContent: 'center', padding: '0.6rem' }}
-              id="tab-subscribe"
+              className="btn btn-primary"
+              style={{ padding: '0.95rem 2rem', fontSize: '1.1rem', flex: '1 1 180px' }}
+              onClick={() => setActiveModal('subscribe')}
+              id="btn-main-subscribe"
             >
-              <UserCheck size={16} /> Subscribe
+              <UserCheck size={20} /> Subscribe
             </button>
+
             <button
-              className={`nav-tab-btn ${activeTab === 'unsubscribe' ? 'active' : ''}`}
-              onClick={() => setActiveTab('unsubscribe')}
-              style={{ flex: 1, justifyContent: 'center', padding: '0.6rem' }}
-              id="tab-unsubscribe"
+              className="btn btn-secondary"
+              style={{ padding: '0.95rem 2rem', fontSize: '1.1rem', flex: '1 1 180px' }}
+              onClick={() => setActiveModal('unsubscribe')}
+              id="btn-main-unsubscribe"
             >
-              <UserMinus size={16} /> Self-Service Unsubscribe
+              <UserMinus size={20} /> Unsubscribe
             </button>
           </div>
-        )}
 
-        {/* Main Glassmorphism Card */}
-        <div className="glass-card">
-          {activeTab === 'subscribe' && (
-            <SubscribeForm onSwitchToUnsubscribe={() => setActiveTab('unsubscribe')} />
-          )}
-
-          {activeTab === 'unsubscribe' && (
-            <UnsubscribePortal
-              initialEmail={initialEmail}
-              onSwitchToSubscribe={() => setActiveTab('subscribe')}
-            />
-          )}
-
-          {activeTab === 'admin' && (
-            <AdminDashboard
-              onOpenSyncModal={() => setIsSyncModalOpen(true)}
-              scriptUrl={scriptUrl}
-            />
-          )}
         </div>
       </div>
 
-      {/* Google Sheet Modal */}
-      <GoogleSheetSyncModal
-        isOpen={isSyncModalOpen}
-        onClose={() => setIsSyncModalOpen(false)}
-        onUrlUpdated={(newUrl) => setScriptUrl(newUrl)}
-      />
+      {/* Subscribe Modal */}
+      {activeModal === 'subscribe' && (
+        <SubscribeForm onClose={() => setActiveModal(null)} />
+      )}
+
+      {/* Unsubscribe Modal */}
+      {activeModal === 'unsubscribe' && (
+        <UnsubscribePortal
+          initialEmail={initialEmail}
+          onClose={() => setActiveModal(null)}
+        />
+      )}
     </div>
   );
 }

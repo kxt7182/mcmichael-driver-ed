@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { Mail, Check, Send, Sparkles, Info, AlertCircle, Edit2, ArrowRight } from 'lucide-react';
+import { Mail, Check, Sparkles, Info, Edit2, ArrowRight, ArrowLeft } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { subscribeUser } from '../services/storageService';
 
-export function SubscribeForm({ onSwitchToUnsubscribe }) {
+export function SubscribeForm({ onClose }) {
   const [email, setEmail] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submittedData, setSubmittedData] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Initial button click: validates email & opens confirmation modal
+  // Initial button click: validates email & opens verification confirmation modal
   const handleInitialClick = (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -24,7 +24,7 @@ export function SubscribeForm({ onSwitchToUnsubscribe }) {
     setShowConfirmModal(true);
   };
 
-  // Final confirmation button click
+  // Final confirmation submit
   const executeSubmit = async () => {
     setShowConfirmModal(false);
     setLoading(true);
@@ -50,148 +50,161 @@ export function SubscribeForm({ onSwitchToUnsubscribe }) {
   };
 
   return (
-    <div>
-      {submittedData ? (
-        <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-          <div style={{
-            width: '64px',
-            height: '64px',
-            borderRadius: '50%',
-            background: 'rgba(16, 185, 129, 0.2)',
-            color: '#10b981',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 1.25rem auto'
-          }}>
-            <Check size={36} />
-          </div>
-
-          <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>You're Subscribed!</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '1rem' }}>
-            <strong style={{ color: '#38bdf8' }}>{submittedData.subscriber.email}</strong> will receive notifications on upcoming driver education classes.
-          </p>
-
-          {submittedData.apiResult?.isLocalFallback && (
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', background: 'rgba(56,189,248,0.08)', padding: '0.75rem', borderRadius: '8px', marginBottom: '1.5rem' }}>
-              <Info size={14} style={{ display: 'inline', marginRight: '5px' }} />
-              Saved locally. Connect a Google Sheet anytime via the ⚙️ icon in the top right.
-            </div>
-          )}
-
-          <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button
-              className="btn btn-secondary"
-              onClick={() => { setSubmittedData(null); setEmail(''); }}
-            >
-              Add Another Email
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={onSwitchToUnsubscribe}
-              style={{ color: '#f87171' }}
-            >
-              Need to Unsubscribe?
-            </button>
-          </div>
-        </div>
-      ) : (
-        <form onSubmit={handleInitialClick}>
-          <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-            <label className="form-label" htmlFor="simple-email-input" style={{ fontSize: '0.95rem' }}>
-              Email Address
-            </label>
-            <div className="input-wrapper">
-              <Mail className="input-icon" size={20} />
-              <input
-                id="simple-email-input"
-                type="email"
-                required
-                className="form-input"
-                placeholder="your.email@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                style={{ padding: '0.9rem 1rem 0.9rem 2.8rem', fontSize: '1.05rem' }}
-              />
-            </div>
-          </div>
-
-          {errorMsg && (
-            <div style={{ color: '#f87171', fontSize: '0.9rem', marginBottom: '1rem', textAlign: 'center' }}>
-              {errorMsg}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn btn-primary btn-full"
-            style={{ padding: '0.95rem', fontSize: '1.05rem', fontWeight: '700' }}
-            id="btn-simple-subscribe"
-          >
-            {loading ? 'Processing...' : 'Join Contact List'}
-          </button>
-        </form>
-      )}
-
-      {/* Confirmation Modal */}
-      {showConfirmModal && (
-        <div className="modal-overlay" onClick={() => setShowConfirmModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '480px', textAlign: 'center', padding: '2rem' }}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px' }}>
+        
+        {submittedData ? (
+          <div style={{ textAlign: 'center', padding: '1rem 0' }}>
             <div style={{
-              width: '56px',
-              height: '56px',
+              width: '64px',
+              height: '64px',
               borderRadius: '50%',
-              background: 'rgba(56, 189, 248, 0.15)',
-              color: '#38bdf8',
+              background: 'rgba(16, 185, 129, 0.15)',
+              color: '#10b981',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 1.25rem auto'
             }}>
-              <Mail size={28} />
+              <Check size={36} />
             </div>
 
-            <h3 style={{ fontSize: '1.4rem', marginBottom: '0.5rem' }}>Confirm Email Address</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
-              Please double check your email address before joining the McMichael Driver Education contact list:
+            <h2 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>You're Subscribed!</h2>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '1rem' }}>
+              <strong style={{ color: '#1249a0' }}>{submittedData.subscriber.email}</strong> has been added to the McMichael Driver Education contact list.
             </p>
 
-            <div style={{
-              background: '#eff6ff',
-              border: '1.5px solid #1249a0',
-              borderRadius: '12px',
-              padding: '1rem',
-              fontSize: '1.15rem',
-              fontWeight: '700',
-              color: '#1249a0',
-              wordBreak: 'break-all',
-              marginBottom: '1.5rem'
-            }}>
-              {email.trim().toLowerCase()}
+            <button
+              className="btn btn-primary btn-full"
+              onClick={onClose}
+            >
+              Done
+            </button>
+          </div>
+        ) : (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: '800', color: '#1249a0' }}>Subscribe to Contact List</h3>
+              <button
+                type="button"
+                onClick={onClose}
+                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-dim)', fontSize: '1.2rem' }}
+              >
+                ✕
+              </button>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button
-                className="btn btn-secondary"
-                style={{ flex: 1 }}
-                onClick={() => setShowConfirmModal(false)}
-                id="btn-edit-email"
-              >
-                <Edit2 size={16} /> Edit Email
-              </button>
-              <button
-                className="btn btn-primary"
-                style={{ flex: 1 }}
-                onClick={executeSubmit}
-                id="btn-confirm-submit"
-              >
-                Confirm & Submit <ArrowRight size={16} />
-              </button>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
+              Enter your email address below to receive notifications when new driver education classes open.
+            </p>
+
+            <form onSubmit={handleInitialClick}>
+              <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                <label className="form-label" htmlFor="modal-subscribe-email" style={{ fontSize: '0.95rem' }}>
+                  Email Address:
+                </label>
+                <div className="input-wrapper">
+                  <Mail className="input-icon" size={20} />
+                  <input
+                    id="modal-subscribe-email"
+                    type="email"
+                    required
+                    autoFocus
+                    className="form-input"
+                    placeholder="your.email@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {errorMsg && (
+                <div style={{ color: '#e11d48', fontSize: '0.9rem', marginBottom: '1rem', textAlign: 'center' }}>
+                  {errorMsg}
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem' }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  style={{ flex: 1 }}
+                  onClick={onClose}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="btn btn-primary"
+                  style={{ flex: 1.5 }}
+                >
+                  {loading ? 'Processing...' : 'Next'}
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* Inner Email Verification Confirmation Modal */}
+        {showConfirmModal && (
+          <div className="modal-overlay" onClick={() => setShowConfirmModal(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '440px', textAlign: 'center', padding: '2rem' }}>
+              <div style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '50%',
+                background: '#eff6ff',
+                color: '#1249a0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.25rem auto'
+              }}>
+                <Mail size={28} />
+              </div>
+
+              <h3 style={{ fontSize: '1.35rem', marginBottom: '0.5rem' }}>Confirm Email Address</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
+                Please double check your email address before submitting:
+              </p>
+
+              <div style={{
+                background: '#eff6ff',
+                border: '1.5px solid #1249a0',
+                borderRadius: '12px',
+                padding: '1rem',
+                fontSize: '1.15rem',
+                fontWeight: '700',
+                color: '#1249a0',
+                wordBreak: 'break-all',
+                marginBottom: '1.5rem'
+              }}>
+                {email.trim().toLowerCase()}
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  style={{ flex: 1 }}
+                  onClick={() => setShowConfirmModal(false)}
+                >
+                  <Edit2 size={16} /> Edit
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  style={{ flex: 1.5 }}
+                  onClick={executeSubmit}
+                >
+                  Confirm & Submit
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

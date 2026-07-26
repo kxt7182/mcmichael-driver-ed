@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, UserX, CheckCircle, ShieldAlert, Trash2, Edit2, ArrowRight } from 'lucide-react';
-import { getSubscribersFromLocal, unsubscribeUser } from '../services/storageService';
+import { Mail, UserX, Trash2, Edit2, ArrowRight } from 'lucide-react';
+import { unsubscribeUser } from '../services/storageService';
 
-export function UnsubscribePortal({ initialEmail = '', onSwitchToSubscribe }) {
+export function UnsubscribePortal({ initialEmail = '', onClose }) {
   const [emailInput, setEmailInput] = useState(initialEmail);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -52,89 +52,14 @@ export function UnsubscribePortal({ initialEmail = '', onSwitchToSubscribe }) {
   };
 
   return (
-    <div>
-      {result ? (
-        <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-          <div style={{
-            width: '64px',
-            height: '64px',
-            borderRadius: '50%',
-            background: 'rgba(244, 63, 94, 0.15)',
-            color: '#f43f5e',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 1.25rem auto'
-          }}>
-            <UserX size={36} />
-          </div>
-
-          <h2 style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>Email Removed</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.95rem' }}>
-            <strong style={{ color: 'white' }}>{result.subscriber.email}</strong> has been unsubscribed from driver education course alerts.
-          </p>
-
-          <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
-            <button
-              className="btn btn-secondary"
-              onClick={() => { setResult(null); setEmailInput(''); }}
-            >
-              Done
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={onSwitchToSubscribe}
-            >
-              Re-Subscribe Email
-            </button>
-          </div>
-        </div>
-      ) : (
-        <form onSubmit={handleInitialClick}>
-          <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-            <label className="form-label" htmlFor="unsubscribe-simple-email" style={{ fontSize: '0.95rem' }}>
-              Enter Email Address to Remove:
-            </label>
-            <div className="input-wrapper">
-              <Mail className="input-icon" size={20} />
-              <input
-                id="unsubscribe-simple-email"
-                type="email"
-                required
-                className="form-input"
-                placeholder="your.email@example.com"
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
-                style={{ padding: '0.9rem 1rem 0.9rem 2.8rem', fontSize: '1.05rem' }}
-              />
-            </div>
-          </div>
-
-          {errorMsg && (
-            <div style={{ color: '#f87171', fontSize: '0.9rem', marginBottom: '1rem', textAlign: 'center' }}>
-              {errorMsg}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn btn-danger btn-full"
-            style={{ padding: '0.95rem', fontSize: '1.05rem', fontWeight: '700' }}
-            id="btn-simple-unsubscribe"
-          >
-            {loading ? 'Processing...' : 'Remove My Email Address'}
-          </button>
-        </form>
-      )}
-
-      {/* Confirmation Modal */}
-      {showConfirmModal && (
-        <div className="modal-overlay" onClick={() => setShowConfirmModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '480px', textAlign: 'center', padding: '2rem' }}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px' }}>
+        
+        {result ? (
+          <div style={{ textAlign: 'center', padding: '1rem 0' }}>
             <div style={{
-              width: '56px',
-              height: '56px',
+              width: '64px',
+              height: '64px',
               borderRadius: '50%',
               background: 'rgba(244, 63, 94, 0.15)',
               color: '#f43f5e',
@@ -143,47 +68,145 @@ export function UnsubscribePortal({ initialEmail = '', onSwitchToSubscribe }) {
               justifyContent: 'center',
               margin: '0 auto 1.25rem auto'
             }}>
-              <Trash2 size={28} />
+              <UserX size={36} />
             </div>
 
-            <h3 style={{ fontSize: '1.4rem', marginBottom: '0.5rem' }}>Confirm Unsubscribe</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
-              Are you sure you want to remove this email address from the McMichael Driver Education contact list?
+            <h2 style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>Email Removed</h2>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.95rem' }}>
+              <strong style={{ color: '#0f172a' }}>{result.subscriber.email}</strong> has been unsubscribed from driver education course alerts.
             </p>
 
-            <div style={{
-              background: '#fff1f2',
-              border: '1.5px solid #f43f5e',
-              borderRadius: '12px',
-              padding: '1rem',
-              fontSize: '1.15rem',
-              fontWeight: '700',
-              color: '#e11d48',
-              wordBreak: 'break-all',
-              marginBottom: '1.5rem'
-            }}>
-              {emailInput.trim().toLowerCase()}
+            <button
+              className="btn btn-secondary btn-full"
+              onClick={onClose}
+            >
+              Close
+            </button>
+          </div>
+        ) : (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: '800', color: '#e11d48' }}>Unsubscribe from Contact List</h3>
+              <button
+                type="button"
+                onClick={onClose}
+                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-dim)', fontSize: '1.2rem' }}
+              >
+                ✕
+              </button>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button
-                className="btn btn-secondary"
-                style={{ flex: 1 }}
-                onClick={() => setShowConfirmModal(false)}
-              >
-                <Edit2 size={16} /> Edit Email
-              </button>
-              <button
-                className="btn btn-danger"
-                style={{ flex: 1 }}
-                onClick={executeUnsubscribe}
-              >
-                Confirm & Remove <ArrowRight size={16} />
-              </button>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
+              Enter your email address below to remove yourself from our course notification list.
+            </p>
+
+            <form onSubmit={handleInitialClick}>
+              <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                <label className="form-label" htmlFor="modal-unsubscribe-email" style={{ fontSize: '0.95rem' }}>
+                  Email Address to Remove:
+                </label>
+                <div className="input-wrapper">
+                  <Mail className="input-icon" size={20} />
+                  <input
+                    id="modal-unsubscribe-email"
+                    type="email"
+                    required
+                    autoFocus
+                    className="form-input"
+                    placeholder="your.email@example.com"
+                    value={emailInput}
+                    onChange={(e) => setEmailInput(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {errorMsg && (
+                <div style={{ color: '#e11d48', fontSize: '0.9rem', marginBottom: '1rem', textAlign: 'center' }}>
+                  {errorMsg}
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem' }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  style={{ flex: 1 }}
+                  onClick={onClose}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="btn btn-danger"
+                  style={{ flex: 1.5 }}
+                >
+                  {loading ? 'Processing...' : 'Next'}
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* Confirmation Modal */}
+        {showConfirmModal && (
+          <div className="modal-overlay" onClick={() => setShowConfirmModal(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '440px', textAlign: 'center', padding: '2rem' }}>
+              <div style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '50%',
+                background: '#fff1f2',
+                color: '#e11d48',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.25rem auto'
+              }}>
+                <Trash2 size={28} />
+              </div>
+
+              <h3 style={{ fontSize: '1.35rem', marginBottom: '0.5rem' }}>Confirm Unsubscribe</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
+                Are you sure you want to remove this email address from the McMichael Driver Education contact list?
+              </p>
+
+              <div style={{
+                background: '#fff1f2',
+                border: '1.5px solid #f43f5e',
+                borderRadius: '12px',
+                padding: '1rem',
+                fontSize: '1.15rem',
+                fontWeight: '700',
+                color: '#e11d48',
+                wordBreak: 'break-all',
+                marginBottom: '1.5rem'
+              }}>
+                {emailInput.trim().toLowerCase()}
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  style={{ flex: 1 }}
+                  onClick={() => setShowConfirmModal(false)}
+                >
+                  <Edit2 size={16} /> Edit
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  style={{ flex: 1.5 }}
+                  onClick={executeUnsubscribe}
+                >
+                  Confirm & Remove
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
