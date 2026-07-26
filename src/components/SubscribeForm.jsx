@@ -89,7 +89,7 @@ export function SubscribeForm({ onClose }) {
             </p>
 
             <button
-              className="btn btn-primary btn-full"
+              className="btn btn-secondary btn-full"
               onClick={onClose}
             >
               Done
@@ -149,8 +149,8 @@ export function SubscribeForm({ onClose }) {
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-primary"
-                  style={{ flex: 1.5 }}
+                  className="btn btn-secondary"
+                  style={{ flex: 1.5, fontWeight: '700' }}
                 >
                   Next
                 </button>
@@ -208,8 +208,8 @@ export function SubscribeForm({ onClose }) {
                 </button>
                 <button
                   type="button"
-                  className="btn btn-primary"
-                  style={{ flex: 1.5 }}
+                  className="btn btn-secondary"
+                  style={{ flex: 1.5, fontWeight: '700' }}
                   disabled={loading}
                   onClick={executeSubmit}
                 >
