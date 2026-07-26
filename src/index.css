@@ -142,15 +142,17 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: none;
 }
 
-.btn-primary {
-  background: linear-gradient(135deg, #1249a0 0%, #0c3577 100%);
-  color: white;
-  box-shadow: 0 4px 14px rgba(18, 73, 160, 0.3);
+.btn-success {
+  background-color: #16a34a !important;
+  background: #16a34a !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
 }
 
-.btn-primary:hover {
-  filter: brightness(1.1);
-  box-shadow: 0 6px 20px rgba(18, 73, 160, 0.45);
+.btn-success:hover {
+  background-color: #15803d !important;
+  background: #15803d !important;
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.45);
   transform: translateY(-1px);
 }
 
@@ -165,14 +167,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
-  color: white;
-  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.25);
+  background-color: #dc2626 !important;
+  background: #dc2626 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
 }
 
 .btn-danger:hover {
-  filter: brightness(1.05);
-  box-shadow: 0 6px 20px rgba(244, 63, 94, 0.35);
+  background-color: #b91c1c !important;
+  background: #b91c1c !important;
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.45);
+  transform: translateY(-1px);
 }
 
 .btn-full {

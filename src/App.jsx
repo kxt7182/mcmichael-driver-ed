@@ -67,21 +67,43 @@ export function App() {
           {/* Action Buttons: Subscribe or Unsubscribe */}
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button
-              className="btn btn-success"
-              style={{ padding: '0.95rem 2rem', fontSize: '1.1rem', flex: '1 1 180px' }}
+              className="btn"
+              style={{
+                backgroundColor: '#16a34a',
+                color: '#ffffff',
+                padding: '1rem 2.2rem',
+                fontSize: '1.15rem',
+                fontWeight: '700',
+                borderRadius: '12px',
+                border: 'none',
+                boxShadow: '0 4px 14px rgba(22, 163, 74, 0.35)',
+                cursor: 'pointer',
+                flex: '1 1 180px'
+              }}
               onClick={() => setActiveModal('subscribe')}
               id="btn-main-subscribe"
             >
-              <UserCheck size={20} /> Subscribe
+              <UserCheck size={22} /> Subscribe
             </button>
 
             <button
-              className="btn btn-danger"
-              style={{ padding: '0.95rem 2rem', fontSize: '1.1rem', flex: '1 1 180px' }}
+              className="btn"
+              style={{
+                backgroundColor: '#dc2626',
+                color: '#ffffff',
+                padding: '1rem 2.2rem',
+                fontSize: '1.15rem',
+                fontWeight: '700',
+                borderRadius: '12px',
+                border: 'none',
+                boxShadow: '0 4px 14px rgba(220, 38, 38, 0.35)',
+                cursor: 'pointer',
+                flex: '1 1 180px'
+              }}
               onClick={() => setActiveModal('unsubscribe')}
               id="btn-main-unsubscribe"
             >
-              <UserMinus size={20} /> Unsubscribe
+              <UserMinus size={22} /> Unsubscribe
             </button>
           </div>
 
